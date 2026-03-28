@@ -64,6 +64,49 @@ if (cluster.isPrimary && env.NODE_ENV === 'production') {
       });
     });
 
+    // --- WebRTC signaling logic ---
+    socket.on('join-meeting', (roomId: string, userDetails) => {
+      socket.join(roomId);
+      // Let everyone else in the meeting room know we arrived
+      socket.broadcast.to(roomId).emit('user-joined-meeting', {
+        socketId: socket.id,
+        userId,
+        ...userDetails
+      });
+
+      socket.on('webrtc-offer', (data: { offer: RTCSessionDescriptionInit, to: string }) => {
+        io.to(data.to).emit('webrtc-offer', { offer: data.offer, from: socket.id, userId, ...userDetails });
+      });
+
+      socket.on('webrtc-answer', (data: { answer: RTCSessionDescriptionInit, to: string }) => {
+        io.to(data.to).emit('webrtc-answer', { answer: data.answer, from: socket.id });
+      });
+
+      socket.on('webrtc-ice-candidate', (data: { candidate: RTCIceCandidateInit, to: string }) => {
+        io.to(data.to).emit('webrtc-ice-candidate', { candidate: data.candidate, from: socket.id });
+      });
+      
+      // Meeting room chatting feature
+      socket.on('meeting-message', (data: { message: string }) => {
+         io.to(roomId).emit('meeting-message', {
+             message: data.message,
+             senderId: socket.id,
+             userId,
+             ...userDetails
+         });
+      });
+    });
+
+    // When connection is closing, inform remaining peers to remove their video elements
+    socket.on('disconnecting', () => {
+      for (const room of socket.rooms) {
+        // Broadcast to all rooms (like meeting rooms) except the automatic user/socket rooms
+        if (room !== socket.id && room !== userId) {
+          socket.broadcast.to(room).emit('user-left-meeting', socket.id);
+        }
+      }
+    });
+
     socket.on('disconnect', () => {
       // Clean up implicitly handled by Socket.IO
     });
