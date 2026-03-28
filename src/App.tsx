@@ -16,6 +16,7 @@ import AdminPanel from "./pages/AdminPanel";
 import Chat from "./pages/Chat";
 import CalendarPage from "./pages/Calendar";
 import Meetings from "./pages/Meetings";
+import MeetingRoom from "./pages/MeetingRoom";
 import AttendancePage from "./pages/AttendancePage";
 import LeavePage from "./pages/LeavePage";
 
@@ -56,6 +57,7 @@ function App() {
                 <Route path="/chat/:userId" element={<Chat />} />
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/meetings" element={<Meetings />} />
+                <Route path="/meeting/:id" element={<MeetingRoom />} />
                 <Route path="/attendance" element={<AttendancePage />} />
                 <Route path="/leave" element={<LeavePage />} />
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { format } from 'date-fns';
@@ -29,6 +30,7 @@ const emptyForm = {
 
 export default function Meetings() {
   const { userInfo } = useAuth();
+  const navigate = useNavigate();
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [users, setUsers] = useState<ChatUser[]>([]);
   const [showForm, setShowForm] = useState(false);
@@ -115,14 +117,24 @@ export default function Meetings() {
               <span className="text-xs text-slate-400">· {m.participants.length} participant{m.participants.length !== 1 ? 's' : ''}</span>
             )}
           </div>
-          {(isOrganizer || userInfo?.role === 'admin') && (
-            <button
-              onClick={() => handleDelete(m._id)}
-              className="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2.5 py-1 hover:bg-rose-50 rounded-lg transition-colors"
-            >
-              Delete
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {m.status === 'scheduled' && (
+              <button
+                onClick={() => navigate(`/meeting/${m._id}`)}
+                className="text-xs text-white bg-indigo-600 hover:bg-indigo-700 font-bold px-4 py-1.5 rounded-lg transition-colors shadow-sm focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500"
+              >
+                Join Call
+              </button>
+            )}
+            {(isOrganizer || userInfo?.role === 'admin') && (
+              <button
+                onClick={() => handleDelete(m._id)}
+                className="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2.5 py-1.5 hover:bg-rose-50 rounded-lg transition-colors"
+              >
+                Delete
+              </button>
+            )}
+          </div>
         </div>
       </div>
     );
