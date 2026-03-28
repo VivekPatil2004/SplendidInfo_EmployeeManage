@@ -1,0 +1,39 @@
+﻿middleware/validate.ts(19,23): error TS2339: Property 'errors' does not exist on type 'ZodError<unknown>'.
+middleware/validate.ts(19,35): error TS7006: Parameter 'e' implicitly has an 'any' type.
+middleware/validate.ts(54,19): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: readonly ["online", "away", "busy", "offline"], params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Object literal may only specify known properties, and 'errorMap' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; }'.
+  Overload 2 of 2, '(entries: Readonly<Record<string, EnumValue>>, params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Argument of type 'string[]' is not assignable to parameter of type 'Readonly<Record<string, EnumValue>>'.
+      Index signature for type 'string' is missing in type 'string[]'.
+middleware/validate.ts(61,18): error TS2353: Object literal may only specify known properties, and 'required_error' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidType<unknown>> | undefined; message?: string | undefined; }'.
+routes/authRoutes.ts(16,14): error TS2769: No overload matches this call.
+  Overload 1 of 5, '(payload: string | object | Buffer<ArrayBufferLike>, secretOrPrivateKey: null, options?: (SignOptions & { algorithm: "none"; }) | undefined): string', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'null'.
+  Overload 2 of 5, '(payload: string | object | Buffer<ArrayBufferLike>, secretOrPrivateKey: Buffer<ArrayBufferLike> | Secret | JsonWebKeyInput | PrivateKeyInput, options?: SignOptions | undefined): string', gave the following error.
+    Type 'string' is not assignable to type 'number | StringValue | undefined'.
+  Overload 3 of 5, '(payload: string | object | Buffer<ArrayBufferLike>, secretOrPrivateKey: Buffer<ArrayBufferLike> | Secret | JsonWebKeyInput | PrivateKeyInput, callback: SignCallback): void', gave the following error.
+    Object literal may only specify known properties, and 'expiresIn' does not exist in type 'SignCallback'.
+routes/authRoutes.ts(24,14): error TS2769: No overload matches this call.
+  Overload 1 of 5, '(payload: string | object | Buffer<ArrayBufferLike>, secretOrPrivateKey: null, options?: (SignOptions & { algorithm: "none"; }) | undefined): string', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'null'.
+  Overload 2 of 5, '(payload: string | object | Buffer<ArrayBufferLike>, secretOrPrivateKey: Buffer<ArrayBufferLike> | Secret | JsonWebKeyInput | PrivateKeyInput, options?: SignOptions | undefined): string', gave the following error.
+    Type 'string' is not assignable to type 'number | StringValue | undefined'.
+  Overload 3 of 5, '(payload: string | object | Buffer<ArrayBufferLike>, secretOrPrivateKey: Buffer<ArrayBufferLike> | Secret | JsonWebKeyInput | PrivateKeyInput, callback: SignCallback): void', gave the following error.
+    Object literal may only specify known properties, and 'expiresIn' does not exist in type 'SignCallback'.
+routes/chatRoutes.ts(67,42): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike'.
+  Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike'.
+    Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+routes/leaveRoutes.ts(64,42): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike'.
+  Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike'.
+    Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+routes/leaveRoutes.ts(106,42): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike'.
+  Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike'.
+    Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+routes/meetingRoutes.ts(79,42): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike'.
+  Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike'.
+    Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+routes/meetingRoutes.ts(109,42): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike'.
+  Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike'.
+    Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+seed.ts(4,27): error TS6059: File 'E:/React-Assigment/src/data/employees.ts' is not under 'rootDir' 'E:/React-Assigment/server'. 'rootDir' is expected to contain all source files.

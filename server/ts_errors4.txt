@@ -1,0 +1,26 @@
+﻿config/env.ts(10,46): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(def: number): ZodDefault<ZodPipe<ZodString, ZodTransform<number, string>>>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'number'.
+  Overload 2 of 2, '(def: () => number): ZodDefault<ZodPipe<ZodString, ZodTransform<number, string>>>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type '() => number'.
+config/env.ts(17,55): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(def: number): ZodDefault<ZodPipe<ZodString, ZodTransform<number, string>>>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'number'.
+  Overload 2 of 2, '(def: () => number): ZodDefault<ZodPipe<ZodString, ZodTransform<number, string>>>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type '() => number'.
+middleware/errorHandler.ts(32,5): error TS2322: Type 'number' is not assignable to type '500'.
+middleware/errorHandler.ts(37,5): error TS2322: Type '400' is not assignable to type '500'.
+middleware/errorHandler.ts(41,5): error TS2322: Type '400' is not assignable to type '500'.
+middleware/errorHandler.ts(45,5): error TS2322: Type '400' is not assignable to type '500'.
+middleware/requestTimeout.ts(14,30): error TS2339: Property 'REQUEST_TIMEOUT_MS' does not exist on type '{ readonly OK: 200; readonly CREATED: 201; readonly NO_CONTENT: 204; readonly BAD_REQUEST: 400; readonly UNAUTHORIZED: 401; readonly FORBIDDEN: 403; readonly NOT_FOUND: 404; readonly TOO_MANY_REQUESTS: 429; readonly LOCKED: 423; readonly INTERNAL_SERVER_ERROR: 500; }'.
+services/authService.ts(44,55): error TS2339: Property 'id' does not exist on type 'IUser'.
+services/authService.ts(45,57): error TS2339: Property 'id' does not exist on type 'IUser'.
+services/authService.ts(48,48): error TS2339: Property 'id' does not exist on type 'IUser'.
+services/authService.ts(77,42): error TS2339: Property 'id' does not exist on type 'IUser'.
+services/authService.ts(79,55): error TS2339: Property 'id' does not exist on type 'IUser'.
+services/authService.ts(80,57): error TS2339: Property 'id' does not exist on type 'IUser'.
+services/authService.ts(86,51): error TS2339: Property 'id' does not exist on type 'IUser'.
+services/authService.ts(104,57): error TS2339: Property 'id' does not exist on type 'IUser'.
+services/authService.ts(109,60): error TS2339: Property 'id' does not exist on type 'IUser'.
+services/authService.ts(110,62): error TS2339: Property 'id' does not exist on type 'IUser'.
+services/authService.ts(116,53): error TS2339: Property 'id' does not exist on type 'IUser'.

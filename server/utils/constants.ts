@@ -1,0 +1,24 @@
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  REQUEST_TIMEOUT: 408,
+  TOO_MANY_REQUESTS: 429,
+  LOCKED: 423,
+  INTERNAL_SERVER_ERROR: 500,
+} as const;
+
+export const AUTH = {
+  MAX_FAILED_ATTEMPTS: 5,
+  LOCK_DURATION_MS: 15 * 60 * 1000, // 15 minutes
+  REFRESH_COOKIE_MAX_AGE_MS: 7 * 24 * 60 * 60 * 1000, // 7 days
+} as const;
+
+export const TIMEOUTS = {
+  REQUEST_TIMEOUT_MS: 30000, // 30 seconds
+  DB_CONNECT_TIMEOUT_MS: 10000, // 10 seconds
+} as const;

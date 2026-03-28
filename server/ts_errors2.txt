@@ -1,0 +1,1 @@
+﻿seed.ts(4,27): error TS6059: File 'E:/React-Assigment/src/data/employees.ts' is not under 'rootDir' 'E:/React-Assigment/server'. 'rootDir' is expected to contain all source files.

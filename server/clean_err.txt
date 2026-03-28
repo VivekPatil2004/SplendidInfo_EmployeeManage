@@ -1,0 +1,12 @@
+﻿[dotenv@17.3.1] injecting env (8) from .env -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+2026-03-28 16:17:54 [31merror[39m: Error: .partial() cannot be used on object schemas containing refinements
+    at Object.partial (E:\React-Assigment\server\node_modules\zod\v4\core\util.cjs:493:15)
+    at inst.partial (E:\React-Assigment\server\node_modules\zod\v4\classic\schemas.cjs:690:49)
+    at Object.<anonymous> (E:\React-Assigment\server\dist\middleware\validate.js:94:59)
+    at Module._compile (node:internal/modules/cjs/loader:1761:14)
+    at Object..js (node:internal/modules/cjs/loader:1893:10)
+    at Module.load (node:internal/modules/cjs/loader:1481:32)
+    at Module._load (node:internal/modules/cjs/loader:1300:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.require (node:internal/modules/cjs/loader:1504:12)
