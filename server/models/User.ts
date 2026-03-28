@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
       index: true,
     },
     password: { type: String, required: true, select: false }, // excluded from queries by default
-    role: { type: String, enum: ['admin', 'employee'], default: 'employee' },
+    role: { type: String, enum: ['admin', 'employee', 'viewer'], default: 'employee' },
     name: { type: String, default: '', trim: true },
     onlineStatus: {
       type: String,
@@ -61,7 +61,7 @@ userSchema.methods.comparePassword = async function (candidate: string): Promise
 export interface IUser extends mongoose.Document {
   email: string;
   password: string;
-  role: 'admin' | 'employee';
+  role: 'admin' | 'employee' | 'viewer';
   name: string;
   onlineStatus: string;
   lastSeen: Date;
