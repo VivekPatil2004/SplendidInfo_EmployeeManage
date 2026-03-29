@@ -50,7 +50,7 @@ export default function Chat() {
       }
     };
     socket.on('newMessage', handler);
-    return () => { socket.off('newMessage'); };
+    return () => { socket.off('newMessage', handler); };
   }, [socket, selectedUser, userInfo]);
 
   useEffect(() => {

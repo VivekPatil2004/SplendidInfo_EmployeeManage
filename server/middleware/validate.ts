@@ -51,14 +51,12 @@ export const loginSchema = z.object({
 });
 
 export const statusSchema = z.object({
-  onlineStatus: z.enum(['online', 'away', 'busy', 'offline'], {
-    error: 'Invalid status value',
-  }),
+  onlineStatus: z.enum(['online', 'away', 'busy', 'offline']),
 });
 
 // --- Employee Schemas ---
 export const createEmployeeSchema = z.object({
-  id: z.number({ error: 'Employee ID required' }).int().positive(),
+  id: z.number().int().positive(),
   firstName: z.string().min(1).max(50).trim(),
   lastName: z.string().min(1).max(50).trim(),
   email: emailField,
@@ -82,12 +80,19 @@ export const updateEmployeeSchema = createEmployeeSchema.partial().omit({ id: tr
 
 // --- Meeting Schemas ---
 const meetingBase = z.object({
-  title: z.string().min(1).max(200).trim(),
+  title: z.string().min(1, 'Title is required').max(200).trim(),
   description: z.string().max(2000).trim().optional(),
-  startTime: z.string().datetime({ message: 'startTime must be a valid ISO datetime' }),
-  endTime: z.string().datetime({ message: 'endTime must be a valid ISO datetime' }),
+  // Accept both datetime-local format ("2026-03-29T08:19") and full ISO strings
+  startTime: z.string().min(1, 'Start time is required').refine(
+    (v) => !isNaN(Date.parse(v)),
+    { message: 'startTime must be a valid date' }
+  ),
+  endTime: z.string().min(1, 'End time is required').refine(
+    (v) => !isNaN(Date.parse(v)),
+    { message: 'endTime must be a valid date' }
+  ),
   location: z.string().max(200).trim().optional(),
-  meetingLink: z.string().url('meetingLink must be a valid URL').optional().or(z.literal('')),
+  meetingLink: z.string().url('meetingLink must be a valid URL').optional().or(z.literal('')).optional(),
   participants: z
     .array(z.string().regex(/^[a-f\d]{24}$/i, 'Invalid participant ID'))
     .max(100)

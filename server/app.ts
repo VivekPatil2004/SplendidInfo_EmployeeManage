@@ -58,7 +58,7 @@ app.use('/api/employees', employeeRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/meetings', meetingRoutes);
 app.use('/api/attendance', attendanceRoutes);
-app.use('/api/leaves', leaveRoutes);
+app.use('/api/leave', leaveRoutes);
 
 // Fallback for 404
 app.use((req, res) => {

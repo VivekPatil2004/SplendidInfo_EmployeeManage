@@ -25,7 +25,7 @@ interface ChatUser {
 
 const emptyForm = {
   title: '', description: '', startTime: '', endTime: '',
-  location: 'Online', meetingLink: '', participants: [] as string[],
+  location: 'Online', participants: [] as string[],
 };
 
 export default function Meetings() {
@@ -107,7 +107,6 @@ export default function Meetings() {
           <div className="flex items-center gap-1.5"><span>📅</span>{format(new Date(m.startTime), 'MMM d, yyyy')}</div>
           <div className="flex items-center gap-1.5"><span>🕐</span>{format(new Date(m.startTime), 'hh:mm a')} – {format(new Date(m.endTime), 'hh:mm a')}</div>
           <div className="flex items-center gap-1.5"><span>📍</span>{m.location}</div>
-          {m.meetingLink && <div className="flex items-center gap-1.5 col-span-2"><span>🔗</span><a href={m.meetingLink} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline truncate">{m.meetingLink}</a></div>}
         </div>
 
         <div className="flex items-center justify-between">
@@ -186,12 +185,6 @@ export default function Meetings() {
               <div>
                 <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Location</label>
                 <input value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-4 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:bg-white" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Meeting Link</label>
-                <input value={form.meetingLink} onChange={e => setForm(f => ({ ...f, meetingLink: e.target.value }))}
-                  placeholder="https://meet.google.com/..."
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-4 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:bg-white" />
               </div>
               <div className="md:col-span-2">

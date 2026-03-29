@@ -1,234 +1,55 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { io, Socket } from 'socket.io-client';
 import { useAuth } from '../context/AuthContext';
-
-// Configure this to point to the backend server (using Vite proxy or raw URL)
-const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
-interface PeerDescriptor {
-  socketId: string;
-  userId: string;
-  name: string;
-  email: string;
-  pc: RTCPeerConnection;
-}
-
-interface Message {
-  senderId: string;
-  name: string;
-  message: string;
-  time: string;
-}
+import { useWebRTC } from '../hooks/useWebRTC';
 
 export default function MeetingRoom() {
   const { id: roomId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { userInfo } = useAuth();
 
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-  const [remoteStreams, setRemoteStreams] = useState<Map<string, { stream: MediaStream, name: string }>>(new Map());
+  const {
+    localStream,
+    remoteStreams,
+    isVideoOn,
+    isAudioOn,
+    isScreenSharing,
+    chatMessages,
+    toggleVideo,
+    toggleAudio,
+    handleScreenShare,
+    sendMessage,
+    error
+  } = useWebRTC(roomId, userInfo);
   
   // UI Tabs State
-  const [isVideoOn, setIsVideoOn] = useState(true);
-  const [isAudioOn, setIsAudioOn] = useState(true);
-  const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [activeTab, setActiveTab] = useState<'participants' | 'chat'>('participants');
-  
-  const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
-  const socketRef = useRef<Socket | null>(null);
-  const peersRef = useRef<Map<string, PeerDescriptor>>(new Map());
-
-  // ICE Servers for STUN traversal
-  const iceServers = {
-    iceServers: [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' }
-    ]
-  };
 
   useEffect(() => {
-    if (!userInfo) return;
-    
-    // Connect Socket with User Token implicitly through Auth Headers if possible
-    // Wait, the backend requires token in auth
-    const token = localStorage.getItem('token');
-    const socket = io(SOCKET_URL, {
-      auth: { token: token }
-    });
-    socketRef.current = socket;
-
-    // Acquire Local Camera Media
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-      setLocalStream(stream);
-      if (localVideoRef.current) localVideoRef.current.srcObject = stream;
-
-      socket.emit('join-meeting', roomId, { name: userInfo.name, email: userInfo.email });
-
-      // 1. When a new user joins, WE are the caller. Create an Offer.
-      socket.on('user-joined-meeting', async (user: any) => {
-        const pc = createPeerConnection(user.socketId, user.name);
-        
-        stream.getTracks().forEach(track => pc.addTrack(track, stream));
-
-        const offer = await pc.createOffer();
-        await pc.setLocalDescription(offer);
-
-        socket.emit('webrtc-offer', { offer, to: user.socketId });
-      });
-
-      // 2. Receive Offer -> Create Answer
-      socket.on('webrtc-offer', async (data: any) => {
-        const pc = createPeerConnection(data.from, data.name);
-        stream.getTracks().forEach(track => pc.addTrack(track, stream));
-        
-        await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
-        const answer = await pc.createAnswer();
-        await pc.setLocalDescription(answer);
-
-        socket.emit('webrtc-answer', { answer, to: data.from });
-      });
-
-      // 3. Receive Answer
-      socket.on('webrtc-answer', async (data: any) => {
-        const peer = peersRef.current.get(data.from);
-        if (peer) await peer.pc.setRemoteDescription(new RTCSessionDescription(data.answer));
-      });
-
-      // 4. ICE Candidate handling
-      socket.on('webrtc-ice-candidate', async (data: any) => {
-        const peer = peersRef.current.get(data.from);
-        if (peer && data.candidate) {
-          await peer.pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-        }
-      });
-
-      // Disconnect Logic
-      socket.on('user-left-meeting', (socketId: string) => {
-        const peer = peersRef.current.get(socketId);
-        if (peer) {
-          peer.pc.close();
-          peersRef.current.delete(socketId);
-          setRemoteStreams(prev => {
-            const next = new Map(prev);
-            next.delete(socketId);
-            return next;
-          });
-        }
-      });
-      
-      // Chat handler
-      socket.on('meeting-message', (data: any) => {
-          setChatMessages(prev => [...prev, {
-              senderId: data.senderId,
-              name: data.name || data.email,
-              message: data.message,
-              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          }]);
-      });
-
-    }).catch(err => {
-       console.error("Camera access denied", err);
-       alert("Camera/Microphone access is required to join the meeting.");
-       navigate('/meetings');
-    });
-
-    return () => {
-      // Cleanup WebRTC connections
-      peersRef.current.forEach(peer => peer.pc.close());
-      if (localStream) localStream.getTracks().forEach(track => track.stop());
-      socket.disconnect();
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId, userInfo]);
-
-  const createPeerConnection = (socketId: string, name: string): RTCPeerConnection => {
-    const pc = new RTCPeerConnection(iceServers);
-
-    peersRef.current.set(socketId, { socketId, userId: '', name, email: '', pc });
-
-    pc.onicecandidate = (event) => {
-      if (event.candidate) {
-        socketRef.current?.emit('webrtc-ice-candidate', { candidate: event.candidate, to: socketId });
-      }
-    };
-
-    pc.ontrack = (event) => {
-      setRemoteStreams(prev => {
-        const map = new Map(prev);
-        map.set(socketId, { stream: event.streams[0], name });
-        return map;
-      });
-    };
-
-    return pc;
-  };
-
-  const toggleVideo = () => {
-    if (localStream) {
-      localStream.getVideoTracks().forEach(track => (track.enabled = !isVideoOn));
-      setIsVideoOn(!isVideoOn);
+    if (localVideoRef.current && localStream) {
+       localVideoRef.current.srcObject = localStream;
     }
-  };
+  }, [localStream]);
 
-  const toggleAudio = () => {
-    if (localStream) {
-      localStream.getAudioTracks().forEach(track => (track.enabled = !isAudioOn));
-      setIsAudioOn(!isAudioOn);
+  // Navigate away on error
+  useEffect(() => {
+    if (error) {
+      alert(error);
+      navigate('/meetings');
     }
-  };
-
-  const handleScreenShare = async () => {
-    try {
-      if (!isScreenSharing) {
-        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        const screenTrack = screenStream.getVideoTracks()[0];
-        
-        // Replace video track for all peers
-        peersRef.current.forEach(peer => {
-          const sender = peer.pc.getSenders().find(s => s.track?.kind === 'video');
-          if (sender) sender.replaceTrack(screenTrack);
-        });
-        
-        // Show screen share locally
-        if (localVideoRef.current) localVideoRef.current.srcObject = screenStream;
-        setIsScreenSharing(true);
-
-        // Revert on native "Stop Sharing" button click
-        screenTrack.onended = () => {
-          stopScreenSharing();
-        };
-      } else {
-        stopScreenSharing();
-      }
-    } catch (e) {
-      console.error("Screen share failed", e);
-    }
-  };
-  
-  const stopScreenSharing = () => {
-     if (localStream) {
-        const videoTrack = localStream.getVideoTracks()[0];
-        peersRef.current.forEach(peer => {
-          const sender = peer.pc.getSenders().find(s => s.track?.kind === 'video');
-          if (sender) sender.replaceTrack(videoTrack);
-        });
-        if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
-        setIsScreenSharing(false);
-     }
-  };
+  }, [error, navigate]);
 
   const leaveCall = () => {
     navigate('/meetings');
   };
   
-  const sendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = (e: React.FormEvent) => {
       e.preventDefault();
-      if (!newMessage.trim() || !socketRef.current) return;
-      socketRef.current.emit('meeting-message', { message: newMessage.trim() });
+      if (!newMessage.trim()) return;
+      sendMessage(newMessage.trim());
       setNewMessage('');
   };
 
@@ -329,7 +150,7 @@ export default function MeetingRoom() {
                      ))
                    )}
                 </div>
-                <form onSubmit={sendMessage} className="p-4 bg-slate-950 flex gap-2 shrink-0">
+                <form onSubmit={handleSendMessage} className="p-4 bg-slate-950 flex gap-2 shrink-0">
                     <input 
                       type="text" 
                       value={newMessage}
