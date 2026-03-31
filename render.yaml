@@ -2,6 +2,7 @@ services:
   - type: web
     name: luminous-enterprise
     env: node
+    plan: free
     buildCommand: npm run render-build
     startCommand: npm start
     envVars:
