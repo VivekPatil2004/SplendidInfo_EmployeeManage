@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: luminous-enterprise
+    env: node
+    buildCommand: npm run render-build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false # Set manually in Render dashboard
+      - key: JWT_SECRET
+        sync: false # Set manually in Render dashboard
+      - key: JWT_REFRESH_SECRET
+        sync: false # Set manually in Render dashboard
+      - key: CLIENT_URL
+        value: "https://luminous-enterprise.onrender.com" # Example url, but essentially doesn't block since we softened the requirement

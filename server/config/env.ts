@@ -9,7 +9,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.string().default('5000').transform(Number),
   MONGODB_URI: z.string().url(),
-  CLIENT_URL: z.string().url(),
+  CLIENT_URL: z.string().optional().default(''), // Internal unified serving
   JWT_SECRET: z.string().min(32),
   JWT_REFRESH_SECRET: z.string().min(32),
   JWT_ACCESS_EXPIRY: z.string().default('1h'),

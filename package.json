@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "render-build": "npm install && npm run build && cd server && npm install && npm run build",
+    "start": "cd server && npm start"
   },
   "dependencies": {
     "axios": "^1.13.6",

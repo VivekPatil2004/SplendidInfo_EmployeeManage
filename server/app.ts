@@ -5,6 +5,7 @@ import hpp from 'hpp';
 import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
+import path from 'path';
 
 import { env } from './config/env';
 import { logger } from './utils/logger';
@@ -24,7 +25,10 @@ const app = express();
 // ==========================================
 // 1. Security & Performance Middlewares
 // ==========================================
-app.use(helmet()); 
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+})); 
 app.use(compression()); 
 app.use(
   cors({
@@ -60,8 +64,17 @@ app.use('/api/meetings', meetingRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/leave', leaveRoutes);
 
-// Fallback for 404
-app.use((req, res) => {
+// Serve Static React App in Production
+const distPath = path.join(__dirname, '../../dist');
+app.use(express.static(distPath));
+
+// Fallback all non-API routes to the React index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
+});
+
+// Fallback for 404 on API specifically
+app.use('/api/*', (req, res) => {
   res.status(404).json({ message: 'API Endpoint Not Found' });
 });
 
