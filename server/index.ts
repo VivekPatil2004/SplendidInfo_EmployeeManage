@@ -85,6 +85,14 @@ if (cluster.isPrimary && env.NODE_ENV === 'production') {
       socket.on('webrtc-ice-candidate', (data: { candidate: RTCIceCandidateInit, to: string }) => {
         io.to(data.to).emit('webrtc-ice-candidate', { candidate: data.candidate, from: socket.id });
       });
+
+      socket.on('webrtc-reaction', (data: { reaction: string }) => {
+        io.to(roomId).emit('webrtc-reaction', { reaction: data.reaction, from: socket.id, name: userDetails.name });
+      });
+
+      socket.on('webrtc-track-status', (data: { isVideoOn: boolean, isAudioOn: boolean, isScreenSharing: boolean }) => {
+        io.to(roomId).emit('webrtc-track-status', { ...data, from: socket.id });
+      });
       
       // Meeting room chatting feature
       socket.on('meeting-message', (data: { message: string }) => {
