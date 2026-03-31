@@ -66,8 +66,10 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Attempt token refresh using httpOnly cookie
-        const { data } = await api.post('/auth/refresh');
+        // Attempt token refresh using httpOnly cookie via raw axios to prevent interceptor loop
+        const { data } = await axios.post('http://localhost:5000/api/auth/refresh', {}, {
+          withCredentials: true
+        });
         const newToken = data.token;
 
         // Update localStorage with new access token

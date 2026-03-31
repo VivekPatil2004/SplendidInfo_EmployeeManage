@@ -34,7 +34,7 @@ export default function Sidebar() {
   const handleStatusChange = async (status: string) => {
     setShowStatusMenu(false);
     updateStatus(status);
-    try { await api.patch('/auth/status', { onlineStatus: status }); } catch {}
+    try { await api.patch('/auth/status', { onlineStatus: status }); } catch (err) { console.error(err); }
     if (socket && userInfo) {
       socket.emit('changeStatus', { userId: userInfo._id, onlineStatus: status });
     }

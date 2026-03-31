@@ -67,7 +67,7 @@ export default function AdminPanel() {
       setActionMsg(`Leave ${status} successfully`);
       fetchAll();
       setTimeout(() => setActionMsg(''), 3000);
-    } catch {}
+    } catch (err) { console.error(err); }
   };
 
   const onlineCount = todayData.filter(r => r.user.onlineStatus === 'online').length;

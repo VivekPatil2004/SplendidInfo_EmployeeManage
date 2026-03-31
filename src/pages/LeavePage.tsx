@@ -55,7 +55,7 @@ export default function LeavePage() {
 
   const handleCancel = async (id: string) => {
     if (!confirm('Cancel this leave request?')) return;
-    try { await api.delete(`/leave/${id}`); fetchLeaves(); } catch {}
+    try { await api.delete(`/leave/${id}`); fetchLeaves(); } catch (err) { console.error(err); }
   };
 
   const approved = leaves.filter(l => l.status === 'approved').length;

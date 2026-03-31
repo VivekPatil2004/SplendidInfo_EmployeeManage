@@ -64,7 +64,7 @@ export default function Chat() {
       setMessages(prev => [...prev, data]);
       socket?.emit('sendMessage', { receiverId: selectedUser._id, message: data });
       setNewMsg('');
-    } catch {}
+    } catch (err) { console.error(err); }
   };
 
 

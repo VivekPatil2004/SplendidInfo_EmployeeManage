@@ -74,8 +74,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       // Attempt graceful cleanup — these calls use the current access token
-      await api.post('/attendance/logout').catch(() => {});
-      await api.post('/auth/logout').catch(() => {}); // Also clears httpOnly refresh token cookie
+      await api.post('/attendance/logout').catch(console.error);
+      await api.post('/auth/logout').catch(console.error); // Also clears httpOnly refresh token cookie
     } finally {
       // Always clear local state regardless of API success
       setUserInfo(null);
@@ -108,6 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth must be used within an AuthProvider');

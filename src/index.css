@@ -91,6 +91,13 @@ body::after {
   100% { transform: translate(-30%, -30%) scale(0.9); }
 }
 
+@keyframes float-up {
+  0% { transform: translateY(0) scale(0.5); opacity: 0; }
+  20% { opacity: 1; transform: translateY(-50px) scale(1.2); }
+  80% { opacity: 1; transform: translateY(-200px) scale(1); }
+  100% { transform: translateY(-250px) scale(0.8); opacity: 0; }
+}
+
 @keyframes shimmer-border {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }

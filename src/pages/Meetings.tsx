@@ -45,12 +45,13 @@ export default function Meetings() {
       const endpoint = userInfo?.role === 'admin' ? '/meetings/all' : '/meetings';
       const { data } = await api.get(endpoint);
       setMeetings(data);
-    } catch { } finally { setLoading(false); }
+    } catch (err) { console.error(err); } finally { setLoading(false); }
   };
 
   useEffect(() => {
     fetchMeetings();
-    api.get('/chat/users').then(r => setUsers(r.data)).catch(() => {});
+    api.get('/chat/users').then(r => setUsers(r.data)).catch(console.error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,7 +72,7 @@ export default function Meetings() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this meeting?')) return;
-    try { await api.delete(`/meetings/${id}`); fetchMeetings(); } catch {}
+    try { await api.delete(`/meetings/${id}`); fetchMeetings(); } catch (err) { console.error(err); }
   };
 
   const toggleParticipant = (uid: string) => {

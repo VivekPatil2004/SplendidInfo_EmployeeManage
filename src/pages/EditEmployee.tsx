@@ -31,7 +31,7 @@ export default function EditEmployee() {
     const fetchEmployee = async () => {
       try {
         const { data } = await api.get('/employees');
-        const employee = data.find((e: Employee) => e.id === Number(id));
+        const employee = data.find((e: Employee) => String(e._id || e.id) === String(id));
         if (employee) {
           setForm({
             firstName: employee.firstName || "",
@@ -51,7 +51,8 @@ export default function EditEmployee() {
         } else {
           setError("Employee not found in database.");
         }
-      } catch (err) {
+      } catch (err: unknown) {
+        console.error("Failed to fetch employee", err);
         setError("Failed to fetch employee data.");
       } finally {
         setLoading(false);

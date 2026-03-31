@@ -17,7 +17,7 @@ export default function EmployeeDetails() {
       try {
         // Find employee among all (or hit a specific /:id endpoint if created. using global list array find equivalent for ease)
         const { data } = await api.get('/employees');
-        const found = data.find((e: Employee) => e.id === Number(id));
+        const found = data.find((e: Employee) => String(e._id || e.id) === String(id));
         setEmp(found || null);
       } catch (err) {
         console.error("Fetch failed", err);
@@ -49,9 +49,10 @@ export default function EmployeeDetails() {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this employee? This cannot be undone.")) {
       try {
-        await api.delete(`/employees/${emp.id}`);
+        await api.delete(`/employees/${emp._id || emp.id}`);
         navigate("/");
-      } catch (err) {
+      } catch (err: unknown) {
+        console.error("Failed to delete record:", err);
         alert("Failed to delete record.");
       }
     }
@@ -73,7 +74,7 @@ export default function EmployeeDetails() {
           {userInfo?.role === 'admin' && (
             <div className="flex items-center gap-3">
               <button
-                onClick={() => navigate(`/edit/${emp.id}`)}
+                onClick={() => navigate(`/edit/${emp._id || emp.id}`)}
                 className="inline-flex items-center justify-center rounded-xl bg-white/80 px-5 py-2.5 text-sm font-bold text-slate-700 shadow-sm border border-slate-200 hover:bg-white transition-all shadow-slate-200/50"
               >
                 Edit Profile
